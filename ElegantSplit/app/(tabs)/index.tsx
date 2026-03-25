@@ -113,8 +113,9 @@ export default function ElegantSplitApp() {
     };
 
     try {
-      // 請替換成自己電腦的 IPv4 位址
-      const BACKEND_URL = "http://<YOUR_LOCAL_IP>:8000/api/calculate";
+      // 專屬的雲端 API 網址
+      const BACKEND_URL =
+        "https://money-calculator-y2le.onrender.com/api/calculate";
 
       const response = await fetch(BACKEND_URL, {
         method: "POST",
