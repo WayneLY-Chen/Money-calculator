@@ -31,15 +31,14 @@
         color: var(--text-primary);
       }
 
-      /* 100% 復刻手機版背景 */
       .background-container {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: url("../../assets/images/marble_bg.jpg") no-repeat center
-          center;
+        /* 🌟 改成這個路徑，瀏覽器才抓得到 */
+        background: url("/assets/images/marble_bg.jpg") no-repeat center center;
         background-size: cover;
         z-index: -2;
       }

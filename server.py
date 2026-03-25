@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from typing import List
+from fastapi.staticfiles import StaticFiles
 import os
 
 app = FastAPI()
@@ -35,6 +36,9 @@ class SplitRequest(BaseModel):
     participants: List[str]
     total_bill: float
     items: List[ExpenseItem]
+
+
+app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 
 
 @app.post("/api/calculate")

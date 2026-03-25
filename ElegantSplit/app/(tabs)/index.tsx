@@ -309,7 +309,7 @@ export default function ElegantSplitApp() {
               style={styles.saveButton}
               onPress={sendToPythonBackend}
             >
-              <Text style={styles.saveButtonText}>送出精密結算</Text>
+              <Text style={styles.saveButtonText}>送出結算</Text>
             </TouchableOpacity>
           </ScrollView>
         </SafeAreaView>
