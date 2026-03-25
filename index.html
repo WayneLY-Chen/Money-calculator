@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Money-Calculator</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #1e293b;
+        --accent: #334155;
+        --bg: #f8fafc;
+      }
+      body {
+        font-family: "Noto Sans TC", sans-serif;
+        background: var(--bg);
+        color: var(--primary);
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 24px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); /* 🌟 改成這一行 */
+        width: 100%;
+        max-width: 450px;
+        border: 1px solid #e2e8f0;
+      }
+      h1 {
+        font-weight: 700;
+        font-size: 24px;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+        text-align: center;
+      }
+      p.subtitle {
+        color: #64748b;
+        font-size: 14px;
+        text-align: center;
+        margin-bottom: 32px;
+      }
+      .input-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: #475569;
+      }
+      input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #cbd5e1;
+        box-sizing: border-box;
+        font-size: 16px;
+        outline: none;
+        transition: 0.3s;
+      }
+      input:focus {
+        border-color: #1e293b;
+        box-shadow: 0 0 0 3px rgba(30, 41, 59, 0.1);
+      }
+      button {
+        width: 100%;
+        padding: 16px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+      }
+      button:hover {
+        background: #0f172a;
+        transform: translateY(-1px);
+      }
+      #result {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px dashed #e2e8f0;
+        display: none;
+      }
+      .result-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #f1f5f9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>💎 Equis</h1>
+      <p class="subtitle">分帳計算機</p>
+
+      <div class="input-group">
+        <label>設計人員</label>
+        <input type="text" id="participants" placeholder="Wayne" />
+      </div>
+
+      <div class="input-group">
+        <label>整單總金額</label>
+        <input type="number" id="total_bill" placeholder="例如：2500" />
+      </div>
+
+      <button onclick="calculate()">開始結算</button>
+
+      <div id="result">
+        <h3 style="font-size: 16px">結算結果</h3>
+        <div id="resultList"></div>
+      </div>
+    </div>
+
+    <script>
+      async function calculate() {
+        const participants = document
+          .getElementById("participants")
+          .value.split(",")
+          .map((s) => s.trim());
+        const total_bill = parseFloat(
+          document.getElementById("total_bill").value,
+        );
+
+        if (!participants.length || !total_bill) return alert("請完整填寫資訊");
+
+        const response = await fetch("/api/calculate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ participants, total_bill, items: [] }),
+        });
+
+        const data = await response.json();
+        if (data.status === "success") {
+          const list = document.getElementById("resultList");
+          list.innerHTML = "";
+          Object.entries(data.final_totals).forEach(([name, total]) => {
+            list.innerHTML += `<div class="result-item"><span>${name}</span><strong>$ ${total.toFixed(0)}</strong></div>`;
+          });
+          document.getElementById("result").style.display = "block";
+        }
+      }
+    </script>
+  </body>
+</html>
