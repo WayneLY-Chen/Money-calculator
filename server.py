@@ -38,7 +38,10 @@ class SplitRequest(BaseModel):
     items: List[ExpenseItem]
 
 
-app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+if os.path.exists("ElegantSplit/assets"):
+    app.mount("/assets", StaticFiles(directory="ElegantSplit/assets"), name="assets")
+else:
+    print("警告：找不到 assets 資料夾，請確認路徑是否為 ElegantSplit/assets")
 
 
 @app.post("/api/calculate")
