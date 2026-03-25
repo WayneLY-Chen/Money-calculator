@@ -5,6 +5,16 @@ from typing import List
 
 app = FastAPI()
 
+
+@app.get("/")
+def read_root():
+    return {
+        "status": "Money-Calculator API Online 💎",
+        "message": "分帳計算機已準備就緒！",
+        "docs": "請訪問 /docs 查看 API 文件"
+    }
+
+
 # 🌟 新增：設定 CORS，允許所有前端連線進來
 app.add_middleware(
     CORSMiddleware,
