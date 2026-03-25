@@ -73,3 +73,10 @@ def calculate_bill(request: SplitRequest):
         "details": receipt_details,
         "final_totals": [{"name": p, "total": t} for p, t in totals.items()]
     }
+
+
+if __name__ == "__main__":
+    import uvicorn
+    # 開啟伺服器，設定 host 為 0.0.0.0 讓同一個 Wi-Fi 下的手機連得進來
+    # port 預設使用 8000
+    uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)
