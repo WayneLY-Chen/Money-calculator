@@ -5,152 +5,437 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Money-Calculator</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --primary: #1e293b;
-        --accent: #334155;
-        --bg: #f8fafc;
+        --bg-overlay: rgba(15, 23, 42, 0.65);
+        --card-bg: rgba(30, 41, 59, 0.85);
+        --input-bg: rgba(15, 23, 42, 0.7);
+        --text-primary: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --text-dim: #94a3b8;
+        --accent: #38bdf8;
       }
-      body {
-        font-family: "Noto Sans TC", sans-serif;
-        background: var(--bg);
-        color: var(--primary);
+
+      body,
+      html {
         margin: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        padding: 0;
+        font-family:
+          "Inter",
+          -apple-system,
+          sans-serif;
         min-height: 100vh;
+        color: var(--text-primary);
       }
-      .container {
-        background: white;
-        padding: 40px;
-        border-radius: 24px;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); /* 🌟 改成這一行 */
-        width: 100%;
-        max-width: 450px;
-        border: 1px solid #e2e8f0;
+
+      /* 100% 復刻手機版背景 */
+      .background-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("../../assets/images/marble_bg.jpg") no-repeat center
+          center;
+        background-size: cover;
+        z-index: -2;
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--bg-overlay);
+        z-index: -1;
+      }
+
+      /* 滾動容器 */
+      .main-scroll {
+        padding: 40px 20px 60px;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      /* Header 樣式 */
+      header {
+        margin-top: 20px;
+        margin-bottom: 24px;
       }
       h1 {
-        font-weight: 700;
-        font-size: 24px;
-        letter-spacing: 1px;
-        margin-bottom: 8px;
-        text-align: center;
+        font-size: 32px;
+        font-weight: 800;
+        margin: 0;
+        letter-spacing: -0.5px;
       }
-      p.subtitle {
-        color: #64748b;
-        font-size: 14px;
-        text-align: center;
-        margin-bottom: 32px;
+      .subtitle {
+        font-size: 15px;
+        color: var(--text-secondary);
+        margin-top: 6px;
       }
-      .input-group {
+
+      /* 卡片樣式 */
+      .card {
+        background: var(--card-bg);
+        border-radius: 24px;
+        padding: 24px;
         margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .card-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 12px;
       }
       label {
         display: block;
-        font-size: 13px;
-        font-weight: 500;
-        margin-bottom: 8px;
-        color: #475569;
+        font-size: 14px;
+        color: var(--text-dim);
+        margin: 16px 0 8px;
       }
+
+      /* 輸入框 */
       input {
         width: 100%;
-        padding: 12px;
-        border-radius: 10px;
-        border: 1px solid #cbd5e1;
-        box-sizing: border-box;
+        background: var(--input-bg);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 14px;
+        padding: 16px;
+        color: var(--text-primary);
         font-size: 16px;
+        box-sizing: border-box;
         outline: none;
-        transition: 0.3s;
+        transition: 0.2s;
       }
       input:focus {
-        border-color: #1e293b;
-        box-shadow: 0 0 0 3px rgba(30, 41, 59, 0.1);
+        border-color: var(--accent);
       }
-      button {
-        width: 100%;
-        padding: 16px;
-        background: var(--primary);
-        color: white;
+
+      /* 按鈕類 */
+      .btn-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 12px;
+      }
+      .small-btn {
+        background: #f8fafc;
+        color: #0f172a;
         border: none;
         border-radius: 12px;
-        font-size: 16px;
+        padding: 12px 20px;
         font-weight: 700;
         cursor: pointer;
-        transition: 0.3s;
-        margin-top: 10px;
       }
-      button:hover {
-        background: #0f172a;
-        transform: translateY(-1px);
+
+      .add-item-btn {
+        width: 100%;
+        background: transparent;
+        border: 1px solid #475569;
+        border-radius: 14px;
+        padding: 16px;
+        color: #f1f5f9;
+        font-weight: 600;
+        margin-top: 24px;
+        cursor: pointer;
       }
-      #result {
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px dashed #e2e8f0;
-        display: none;
+
+      .save-btn {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 16px;
+        padding: 18px;
+        color: var(--text-primary);
+        font-size: 18px;
+        font-weight: 800;
+        cursor: pointer;
+        margin-top: 20px;
       }
-      .result-item {
+
+      /* Chip 標籤 */
+      .chip-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 12px;
+      }
+      .chip {
+        padding: 10px 16px;
+        border-radius: 20px;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-dim);
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .chip.selected {
+        background: #f8fafc;
+        color: #0f172a;
+        font-weight: 700;
+      }
+      .display-chip {
+        padding: 8px 14px;
+        border-radius: 20px;
+        background: rgba(15, 23, 42, 0.6);
+        font-size: 13px;
+      }
+
+      /* 清單顯示 */
+      .list-item {
         display: flex;
         justify-content: space-between;
-        padding: 10px 0;
-        border-bottom: 1px solid #f1f5f9;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* 結算畫面特有 */
+      .summary-card {
+        text-align: center;
+        padding: 32px;
+        background: rgba(15, 23, 42, 0.8);
+        border-radius: 24px;
+        margin-bottom: 20px;
+      }
+      .summary-label {
+        color: var(--text-dim);
+        font-size: 15px;
+        margin-bottom: 8px;
+      }
+      .summary-total {
+        font-size: 46px;
+        font-weight: 800;
+        margin: 0;
+      }
+      .result-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 16px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      #input-view,
+      #result-view {
+        display: none;
+      }
+      .show {
+        display: block !important;
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>💎 Equis</h1>
-      <p class="subtitle">分帳計算機</p>
+    <div class="background-container"></div>
+    <div class="overlay"></div>
 
-      <div class="input-group">
-        <label>設計人員</label>
-        <input type="text" id="participants" placeholder="Wayne" />
+    <div class="main-scroll">
+      <div id="input-view" class="show">
+        <header>
+          <h1>聚餐結算</h1>
+          <div class="subtitle">扣除個別花費，精準平分餘額</div>
+        </header>
+
+        <div class="card">
+          <div class="card-title">1. 參與聚餐的朋友</div>
+          <div class="btn-row">
+            <input type="text" id="newPersonName" placeholder="輸入朋友名字" />
+            <button class="small-btn" onclick="addPerson()">新增</button>
+          </div>
+          <div class="chip-container" id="participantsList"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">2. 整單總金額</div>
+          <input
+            type="text"
+            id="totalBill"
+            placeholder="$ 0"
+            style="font-size: 24px; font-weight: 700; margin-top: 12px"
+          />
+        </div>
+
+        <div class="card">
+          <div class="card-title">3. 獨立計算項目 (選填)</div>
+          <label>項目名稱</label>
+          <input type="text" id="itemName" placeholder="例如：生啤酒" />
+          <label>該項目金額</label>
+          <input type="text" id="itemPrice" placeholder="例如：120*3" />
+          <label>誰參與了這項消費？</label>
+          <div class="chip-container" id="consumerSelection"></div>
+          <button class="add-item-btn" onclick="addItemToList()">
+            ＋ 加入獨立項目
+          </button>
+          <div id="itemListDisplay" style="margin-top: 24px"></div>
+        </div>
+
+        <button class="save-btn" onclick="sendToBackend()">送出結算</button>
       </div>
 
-      <div class="input-group">
-        <label>整單總金額</label>
-        <input type="number" id="total_bill" placeholder="例如：2500" />
-      </div>
+      <div id="result-view">
+        <header>
+          <h1>結算完成</h1>
+          <div class="subtitle">每人的最終應付金額</div>
+        </header>
 
-      <button onclick="calculate()">開始結算</button>
+        <div class="summary-card">
+          <div class="summary-label">本單總金額</div>
+          <div class="summary-total" id="resTotalBill">$ 0</div>
+          <div
+            class="summary-label"
+            id="resSharedInfo"
+            style="margin-top: 12px; font-size: 13px"
+          ></div>
+        </div>
 
-      <div id="result">
-        <h3 style="font-size: 16px">結算結果</h3>
-        <div id="resultList"></div>
+        <div class="card" id="finalDetailsList">
+          <div class="card-title">個人應付明細</div>
+        </div>
+
+        <button
+          class="save-btn"
+          style="background: rgba(255, 255, 255, 0.05)"
+          onclick="resetApp()"
+        >
+          開始新的聚餐計算
+        </button>
       </div>
     </div>
 
     <script>
-      async function calculate() {
-        const participants = document
-          .getElementById("participants")
-          .value.split(",")
-          .map((s) => s.trim());
-        const total_bill = parseFloat(
-          document.getElementById("total_bill").value,
-        );
+      let participants = [];
+      let itemList = [];
+      let selectedConsumers = [];
 
-        if (!participants.length || !total_bill) return alert("請完整填寫資訊");
+      // 模擬手機版 handleAddPerson
+      function addPerson() {
+        const input = document.getElementById("newPersonName");
+        const name = input.value.trim();
+        if (!name || participants.includes(name)) return;
+        participants.push(name);
+        input.value = "";
+        renderParticipants();
+      }
 
-        const response = await fetch("/api/calculate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ participants, total_bill, items: [] }),
-        });
+      function renderParticipants() {
+        const list = document.getElementById("participantsList");
+        const selection = document.getElementById("consumerSelection");
+        list.innerHTML = participants
+          .map((p) => `<div class="display-chip">${p}</div>`)
+          .join("");
+        selection.innerHTML = participants
+          .map(
+            (p) => `
+                <div class="chip ${selectedConsumers.includes(p) ? "selected" : ""}" onclick="toggleConsumer('${p}')">${p}</div>
+            `,
+          )
+          .join("");
+      }
 
-        const data = await response.json();
-        if (data.status === "success") {
-          const list = document.getElementById("resultList");
-          list.innerHTML = "";
-          Object.entries(data.final_totals).forEach(([name, total]) => {
-            list.innerHTML += `<div class="result-item"><span>${name}</span><strong>$ ${total.toFixed(0)}</strong></div>`;
-          });
-          document.getElementById("result").style.display = "block";
+      function toggleConsumer(name) {
+        if (selectedConsumers.includes(name)) {
+          selectedConsumers = selectedConsumers.filter((c) => c !== name);
+        } else {
+          selectedConsumers.push(name);
         }
+        renderParticipants();
+      }
+
+      // 模擬手機版 handleAddItemToList (包含算式解析)
+      function addItemToList() {
+        const name = document.getElementById("itemName").value;
+        const priceExp = document.getElementById("itemPrice").value;
+        if (!name || !priceExp || selectedConsumers.length === 0)
+          return alert("資訊不完整");
+
+        try {
+          const amount = eval(priceExp.replace(/[^0-9+\-*/().]/g, ""));
+          itemList.push({ name, amount, consumers: [...selectedConsumers] });
+          document.getElementById("itemName").value = "";
+          document.getElementById("itemPrice").value = "";
+          selectedConsumers = [];
+          renderParticipants();
+          renderItems();
+        } catch (e) {
+          alert("金額算式錯誤");
+        }
+      }
+
+      function renderItems() {
+        const display = document.getElementById("itemListDisplay");
+        display.innerHTML = itemList
+          .map(
+            (item) => `
+                <div class="list-item">
+                    <span style="color: var(--text-secondary)">${item.name}</span>
+                    <span style="font-weight: 700">$ ${item.amount}</span>
+                </div>
+            `,
+          )
+          .join("");
+      }
+
+      // 核心：連線後端
+      async function sendToBackend() {
+        const totalBillExp = document.getElementById("totalBill").value;
+        if (participants.length === 0 || !totalBillExp)
+          return alert("請輸入完整資訊");
+
+        try {
+          const finalTotalBill = eval(
+            totalBillExp.replace(/[^0-9+\-*/().]/g, ""),
+          );
+          const requestData = {
+            participants,
+            total_bill: finalTotalBill,
+            items: itemList,
+          };
+
+          const response = await fetch(
+            "https://money-calculator-y2le.onrender.com/api/calculate",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(requestData),
+            },
+          );
+
+          const result = await response.json();
+          if (result.status === "success") showResult(result, finalTotalBill);
+        } catch (e) {
+          alert("連線或計算出錯");
+        }
+      }
+
+      function showResult(result, total) {
+        document.getElementById("input-view").classList.remove("show");
+        document.getElementById("result-view").classList.add("show");
+
+        document.getElementById("resTotalBill").innerText =
+          `$ ${total.toLocaleString()}`;
+        document.getElementById("resSharedInfo").innerText =
+          `(扣除特定項目後，每人共同平分: $ ${result.shared_per_person.toFixed(0)})`;
+
+        const list = document.getElementById("finalDetailsList");
+        list.innerHTML =
+          '<div class="card-title">個人應付明細</div>' +
+          Object.entries(result.final_totals)
+            .map(
+              ([name, amount]) => `
+                    <div class="result-row">
+                        <span style="font-size: 18px; color: #F1F5F9;">${name}</span>
+                        <span style="font-size: 24px; font-weight: 800;">$ ${amount.toFixed(0)}</span>
+                    </div>
+                `,
+            )
+            .join("");
+      }
+
+      function resetApp() {
+        location.reload();
       }
     </script>
   </body>
