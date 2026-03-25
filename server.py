@@ -71,7 +71,7 @@ def calculate_bill(request: SplitRequest):
         "shared_per_person": shared_per_person,
         "specific_total": specific_total,
         "details": receipt_details,
-        "final_totals": [{"name": p, "total": t} for p, t in totals.items()]
+        "final_totals": totals
     }
 
 
