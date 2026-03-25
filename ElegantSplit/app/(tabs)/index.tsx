@@ -114,7 +114,7 @@ export default function ElegantSplitApp() {
 
     try {
       // 請替換成自己電腦的 IPv4 位址
-      const BACKEND_URL = "http://192.168.0.199:8000/api/calculate";
+      const BACKEND_URL = "http://<YOUR_LOCAL_IP>:8000/api/calculate";
 
       const response = await fetch(BACKEND_URL, {
         method: "POST",
