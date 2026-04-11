@@ -5,6 +5,11 @@ from pydantic import BaseModel
 from typing import List
 from fastapi.staticfiles import StaticFiles
 import os
+import logging
+
+# 設定日誌記錄
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -24,6 +29,12 @@ def read_root():
             return f.read()
     except FileNotFoundError:
         return "<h1> 找不到 index.html 檔案，請檢查路徑！</h1>"
+
+
+@app.get("/health")
+def health_check():
+    """用來檢查伺服器是否運行正常的端點"""
+    return {"status": "ok", "app": "Money-Calculator"}
 
 
 class ExpenseItem(BaseModel):
@@ -46,6 +57,7 @@ else:
 
 @app.post("/api/calculate")
 def calculate_bill(request: SplitRequest):
+    logger.info(f"收到計算請求: {len(request.participants)} 位參與者, {len(request.items)} 個項目")
     totals = {person: 0.0 for person in request.participants}
     receipt_details = []
     specific_total = sum(item.amount for item in request.items)
