@@ -4,7 +4,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Style: Minimalist](https://img.shields.io/badge/style-high--end-black.svg)](#)
 
-> **「優雅地處理每一分花費。」** > Money-Calculator 是一個基於 Python 的財務邏輯引擎，專為解決團體聚餐中「消費不均」的痛點而設計。
+> **「優雅地處理每一分花費。」** 
+> Money-Calculator 是一個基於 Python 的財務邏輯引擎，專為解決團體聚餐中「消費不均」的痛點而設計。
+
+## :link: 線上試用 (Live Demo)
+
+立即體驗：[https://money-calculator-y2le.onrender.com/](https://money-calculator-y2le.onrender.com/)
 
 ## :book: 核心理念
 
